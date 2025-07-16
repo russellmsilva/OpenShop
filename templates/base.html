@@ -1,0 +1,30 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    {% block title %}OpenShop{% endblock %}
+  </title>
+  <link rel="stylesheet" href="/static/styles.css"> <!-- optional -->
+</head>
+<body>
+  <header>
+    <h1>OpenShop</h1>
+    <nav>
+      <a href="/">Home</a> |
+      <a href="{% url 'login' %}">Login</a> |
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}
+    <!-- Page-specific content goes here -->
+    {% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; {% now "Y" %} OpenShop</p>
+  </footer>
+</body>
+</html>
