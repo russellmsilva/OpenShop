@@ -15,6 +15,12 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Ensures that logins are redirected to account/profile and not accounts/profile
+LOGIN_REDIRECT_URL = '/account/profile/'
+
+# Ensures that logouts are redirected to account/profile and not accounts/profile
+LOGOUT_REDIRECT_URL = '/account/login/'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/

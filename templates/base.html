@@ -13,7 +13,17 @@
     <h1>OpenShop</h1>
     <nav>
       <a href="/">Home</a> |
-      <a href="{% url 'login' %}">Login</a> |
+      {% if user.is_authenticated %}
+        <!-- Show logout button -->
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit">Log Out</button>
+        </form>
+      {% else %}
+        <!-- Show login/register links -->
+        <a href="{% url 'login' %}">Login</a> |
+        <a href="{% url 'register' %}">Register</a> |
+      {% endif %}
     </nav>
   </header>
 
