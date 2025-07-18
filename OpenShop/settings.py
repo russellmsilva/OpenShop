@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,6 +22,12 @@ LOGIN_REDIRECT_URL = '/account/profile/'
 # Ensures that logouts are redirected to account/profile and not accounts/profile
 LOGOUT_REDIRECT_URL = '/account/login/'
 
+# Directory for media files (e.g., product images)
+# @todo Use proper web server (e.g., Nginx), not Django directly to store media
+MEDIA_URL = '/media/' 
+
+# Root directory for media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -43,7 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
-    'account'
+    'account',
+    'products'
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,17 @@
+<!-- templates/product_list.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Product Gallery{% endblock %}
+
+{% block content %}
+  <h2>Product Gallery</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for product in products %}
+      <div style="width: 400px;">
+      <img src="{{ product.image.url }}" style="width: 400px; height: 600px; object-fit: cover;" alt="{{ product.name }}">
+      <h4>{{ product.name }}</h4>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
