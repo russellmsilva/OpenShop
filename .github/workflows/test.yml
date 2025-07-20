@@ -1,0 +1,32 @@
+name: Django CI
+
+on:
+  pull_request:
+    branches: [main] # Run on pull requests to the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_SETTINGS_MODULE: openshop.settings # Set the Django settings module
+
+    steps:
+      - uses: actions/checkout@v4 # Check out the repository
+
+      - name: Check SQLite version # Ensure SQLite is available
+        run: sqlite3 --version
+
+      - name: Set up Python # Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install pipenv # Install pipenv for dependency management
+        run: pip install pipenv
+
+      - name: Install dependencies # Install project dependencies using pipenv
+        run: pipenv install --dev --deploy
+
+      - name: Run Django tests # Run the Django test suite
+        run: pipenv run python manage.py test
