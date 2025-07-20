@@ -1,0 +1,43 @@
+name: Django CI
+
+on:
+  pull_request:
+    branches: [main] # Run on pull requests to the main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      DJANGO_SETTINGS_MODULE: OpenShop.settings # Set the Django settings module
+
+    steps:
+      - uses: actions/checkout@v4 # Check out the repository
+
+      - name: Check SQLite version # Ensure SQLite is available
+        run: sqlite3 --version
+
+      - name: Extract Python version from Pipfile # Runs a script that allows python version to be synchronized between GitHub Actions and Pipfile
+        id: python_version
+        run: |
+          PIPFILE_PATH=$(find . -name Pipfile | head -n 1)
+          echo "Found Pipfile at: $PIPFILE_PATH"
+          PY_VERSION=$(grep -Po '(?<=python_version = ")[^"]+' "$PIPFILE_PATH")
+          echo "version=$PY_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Show extracted Python version
+        run: echo "Using Python ${{ steps.python_version.outputs.version }}"
+
+      - name: Set up Python # Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ steps.python_version.outputs.version }}
+
+      - name: Install pipenv # Install pipenv for dependency management
+        run: pip install pipenv
+
+      - name: Install dependencies # Install project dependencies using pipenv
+        run: pipenv install --dev --deploy 
+
+      - name: Run Django tests # Run the Django test suite
+        run: pipenv run python manage.py test

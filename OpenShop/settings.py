@@ -87,6 +87,7 @@ WSGI_APPLICATION = 'OpenShop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# @todo change database to more production ready database (e.g. PostgeSQL)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
