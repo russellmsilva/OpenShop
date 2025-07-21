@@ -36,7 +36,7 @@ def create_test_product(user=None, image=None):
         image = create_test_image()
 
     product = Product.objects.create(
-        owner = user,
+        seller = user,
         name='Test Product',
         description='This is a test product.',
         image=image
@@ -63,13 +63,13 @@ class ProductViewTest(TestCase):
     def test_new_product_view(self):
         response = self.client.get(reverse('new_product'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'new_product.html')
+        self.assertTemplateUsed(response, 'products/new_product.html')
 
     # Ensure the product list view works correctly.
     def test_product_list_view(self):
         response = self.client.get(reverse('products'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'product_list.html')
+        self.assertTemplateUsed(response, 'products/product_list.html')
 
     # Ensure a product can be created successfully.
     def test_create_product(self):
@@ -101,8 +101,8 @@ class ProductModelTest(TestCase):
     def test_product_creation(self):
         self.assertEqual(self.product.name, 'Test Product')
         self.assertEqual(self.product.description, 'This is a test product.')
-        self.assertIsNotNone(self.product.owner)
-        self.assertEqual(self.product.owner.username, 'testuser')
+        self.assertIsNotNone(self.product.seller)
+        self.assertEqual(self.product.seller.username, 'testuser')
         self.assertEqual(self.product.image.name.split('/')[-1], self.test_image.name)
 
     # Ensure that the string representation of the product is correct.
@@ -156,7 +156,7 @@ class ProductFormTest(TestCase):
         form = ProductForm(data=form_data, files=form_files)
         if form.is_valid():
             product = form.save(commit=False)
-            product.owner = User.objects.create_user(username='testuser', password='12345')
+            product.seller = User.objects.create_user(username='testuser', password='12345')
             product.save()
             self.assertTrue(Product.objects.filter(name='Test Product').exists())
 
@@ -182,7 +182,7 @@ class ProductListViewTest(TestCase):
         create_test_product(user=self.user, image=self.test_image)  # Create a test product
         response = self.client.get(reverse('products'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'product_list.html')
+        self.assertTemplateUsed(response, 'products/product_list.html')
         self.assertContains(response, 'Test Product')  # Check if the product is listed
         self.assertContains(response, 'test_image.jpg')
 
@@ -191,5 +191,5 @@ class ProductListViewTest(TestCase):
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].name, 'Test Product')
         self.assertEqual(products[0].description, 'This is a test product.')
-        self.assertEqual(products[0].owner.username, 'testuser')
+        self.assertEqual(products[0].seller.username, 'testuser')
         self.assertEqual(products[0].image.name.split('/')[-1], self.test_image.name)

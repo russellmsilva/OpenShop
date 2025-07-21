@@ -10,6 +10,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile')
     #path('password-reset/', views.password_reset, name='password-reset'), @todo implement me
-    #path('settings/', views.settings, name='settings') @todo implement me
 ]
 
