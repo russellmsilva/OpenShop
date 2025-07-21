@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm
 from .models import Product
@@ -10,14 +10,19 @@ def new_product(request):
         form = ProductForm(request.POST, request.FILES)
         if form.is_valid():
             product = form.save(commit=False) # Create a new product instance but don't save it yet
-            product.owner = request.user # Set the owner to the current user
+            product.seller = request.user # Set the seller to the current user
             product.save() # Save the product instance to the database
             return redirect('products')
     else:
         form = ProductForm()
-    return render(request, 'new_product.html', {'form': form})
+    return render(request, 'products/new_product.html', {'form': form})
 
 # View to list products alphabetically on the product gallery webpage
 def product_list(request):
     products = Product.objects.all().order_by('name')
-    return render(request, 'product_list.html', {'products': products})
+    return render(request, 'products/product_list.html', {'products': products})
+
+# View to remder the products detail page
+def product_detail(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, 'products/product_detail.html', {'product': product})

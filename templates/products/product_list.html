@@ -1,4 +1,4 @@
-<!-- templates/product_list.html -->
+<!-- templates/products/product_list.html -->
 
 {% extends "base.html" %}
 
@@ -10,7 +10,9 @@
     {% for product in products %}
       <div style="width: 400px;">
       <img src="{{ product.image.url }}" style="width: 400px; height: 600px; object-fit: cover;" alt="{{ product.name }}">
-      <h4>{{ product.name }}</h4>
+      <a href="{% url 'product_detail' product.pk %}">
+        <h4>{{ product.name }}</h4>
+      </a>
       </div>
     {% endfor %}
   </div>

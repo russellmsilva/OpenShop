@@ -1,0 +1,21 @@
+<!-- templates/products/product_detail.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Product Gallery{% endblock %}
+
+{% block content %}
+  <h1>{{ product.title }}</h1>
+  <p>{{ product.description }}</p>
+  <!-- @todo uncomment this section once associated models are implemented 
+  <p><strong>Category:</strong> {{ product.category.name }}</p> 
+  <p><strong>In stock:</strong> {{ product.quantity }}</p>
+  <p><strong>Seller:</strong> {{ product.seller.name }}</p> 
+
+  <h2>Reviews</h2>
+  {% for review in product.reviews.all %}
+    <p>{{ review.user.username }} said: "{{ review.text }}"</p>
+  {% empty %}
+    <p>No reviews yet.</p> -->
+{% endfor %}
+{% endblock %}
