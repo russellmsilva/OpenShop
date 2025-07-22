@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from category.models import Category
 
 def homepage(request):

@@ -1,0 +1,20 @@
+<!-- templates/cart.html -->
+
+{% extends "base.html" %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+  <br>
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for cart_item in products_in_cart %}
+      <div style="width: 400px;">
+      <img src="{{ cart_item.product.image.url }}" style="width: 400px; height: 600px; object-fit: cover;" alt="{{ cart_item.product.name }}">
+      <a href="{% url 'product_detail' cart_item.product.pk %}">
+        <h4>{{ cart_item.product.name }}</h4>
+      </a>
+      <h4>Quantity: {{ cart_item.quantity }}</h4>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

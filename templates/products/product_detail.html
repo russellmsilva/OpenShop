@@ -7,6 +7,16 @@
 {% block content %}
   <h1>{{ product.title }}</h1>
   <p>{{ product.description }}</p>
+  <br>
+  {% if error_message %}
+    <div class="alert">{{ error_message }}</div>
+  {% else %}
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Add to cart</button>
+    </form>
+  {% endif %}
   <!-- @todo uncomment this section once associated models are implemented 
   <p><strong>Category:</strong> {{ product.category.name }}</p> 
   <p><strong>In stock:</strong> {{ product.quantity }}</p>

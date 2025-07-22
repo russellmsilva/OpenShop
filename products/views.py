@@ -1,6 +1,8 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from category.models import Category
+from cart.forms import AddToCartForm
+from cart.models import CartItem
 from .forms import ProductForm
 from .models import Product
 
@@ -23,10 +25,40 @@ def product_list(request):
     products = Product.objects.all().order_by('name')
     return render(request, 'products/product_list.html', {'products': products})
 
-# View to remder the products detail page
+# View to render the products detail page
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'products/product_detail.html', {'product': product})
+    
+    # Check if the user is not trying to add their own product to the cart
+    error_message = None
+    if product.seller == request.user:
+        error_message = "You can't add your own product to the cart."
+
+    form = AddToCartForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid() and not error_message:
+        existing_item = CartItem.objects.filter(
+            buyer=request.user,
+            product=product
+        ).first()
+
+        # If the product is an existing item, just update the quantity, do not create a new product entry in the cart
+        if existing_item:
+            existing_item.quantity += form.cleaned_data['quantity']
+            existing_item.save()
+        else:
+            CartItem.objects.create(
+                buyer=request.user,
+                product=product,
+                quantity=form.cleaned_data['quantity']
+            )
+
+        return redirect('display_cart')
+
+    return render(request, 'products/product_detail.html', {
+        'product': product,
+        'form': form,
+        'error_message': error_message
+    })
 
 # View to duplicate product list template by category (so each category can have its own product list page)
 def category_products(request, slug):
