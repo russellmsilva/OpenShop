@@ -5,8 +5,8 @@ from category.models import Category
 # Each product has an associated user (Products to Users represent a many to one relationship)
 # as well as a name, description, and associated image
 class Product(models.Model):
-    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_products')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_products')
     name = models.CharField(max_length=100)
     description = models.TextField()
     image = models.ImageField(upload_to='product_images/')
