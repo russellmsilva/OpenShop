@@ -24,7 +24,8 @@ urlpatterns = [
     path('', include('home.urls')), # Homepage served at root
     path('account/', include('account.urls')),  # auth roles logic
     path('products/', include('products.urls')),  # products pages
-    path('cart', include('cart.urls'))  # cart handling
+    path('cart', include('cart.urls')),  # cart handling
+    path('shipping', include('shipping.urls'))  # shipping information
 ]
 
 # Serve media files during development 
