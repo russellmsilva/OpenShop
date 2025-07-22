@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from products.models import Product
+from category.models import Category
 from PIL import Image
 from products.forms import ProductForm
 
@@ -35,10 +36,14 @@ def create_test_product(user=None, image=None):
     if image is None:
         image = create_test_image()
 
+    # Create a test category
+    category = Category.objects.create(name='Test Category', slug='test-category')
+
     product = Product.objects.create(
         seller = user,
         name='Test Product',
         description='This is a test product.',
+        category=category,
         image=image
     )
     return product
@@ -74,10 +79,12 @@ class ProductViewTest(TestCase):
     # Ensure a product can be created successfully.
     def test_create_product(self):
         self.test_image = create_test_image()
+        self.category = Category.objects.create(name='Test Category', slug='test-category')
         response = self.client.post(reverse('new_product'), {
             'name': 'Test Product',
             'description': 'This is a test product.',
-            'image': self.test_image
+            'image': self.test_image,
+            'category': self.category.id
         })
         self.assertEqual(response.status_code, 302)  # Redirects after successful creation
         self.assertTrue(Product.objects.filter(name='Test Product').exists()) # Check if product was created
@@ -101,6 +108,7 @@ class ProductModelTest(TestCase):
     def test_product_creation(self):
         self.assertEqual(self.product.name, 'Test Product')
         self.assertEqual(self.product.description, 'This is a test product.')
+        self.assertEqual(self.product.category.name, 'Test Category')
         self.assertIsNotNone(self.product.seller)
         self.assertEqual(self.product.seller.username, 'testuser')
         self.assertEqual(self.product.image.name.split('/')[-1], self.test_image.name)
@@ -114,6 +122,7 @@ class ProductModelTest(TestCase):
 class ProductFormTest(TestCase):
     def setUp(self):
         self.test_image = create_test_image()
+        self.category = Category.objects.create(name='Test Category', slug='test-category')
 
     # Clean up any images that may have been created during the test
     def tearDown(self):
@@ -127,7 +136,8 @@ class ProductFormTest(TestCase):
     def test_product_form_valid(self):
         form_data = {
             'name': 'Test Product',
-            'description': 'This is a test product.'
+            'description': 'This is a test product.',
+            'category': self.category.id  # Pass the category's primary key
         }
         form_files = {
             'image': self.test_image
@@ -139,7 +149,8 @@ class ProductFormTest(TestCase):
     def test_product_form_invalid(self):
         form_data = {
             'name': '',
-            'description': ''
+            'description': '',
+            'category': self.category.id  # Pass the category's primary key
         }
         form = ProductForm(data=form_data)
         self.assertFalse(form.is_valid())
@@ -148,7 +159,8 @@ class ProductFormTest(TestCase):
     def test_product_form_save(self):
         form_data = {
             'name': 'Test Product',
-            'description': 'This is a test product.'
+            'description': 'This is a test product.',
+            'category': self.category.id  # Pass the category's primary key
         }
         form_files = {
             'image': self.test_image
@@ -191,5 +203,6 @@ class ProductListViewTest(TestCase):
         self.assertEqual(len(products), 1)
         self.assertEqual(products[0].name, 'Test Product')
         self.assertEqual(products[0].description, 'This is a test product.')
+        self.assertEqual(products[0].category.name, 'Test Category')
         self.assertEqual(products[0].seller.username, 'testuser')
         self.assertEqual(products[0].image.name.split('/')[-1], self.test_image.name)
