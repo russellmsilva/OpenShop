@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from category.models import Category
 
 def homepage(request):
-    return HttpResponse("Welcome to OpenShop")
-
+    categories = Category.objects.all().order_by('name')
+    return render(request, 'home.html', {'categories': categories})

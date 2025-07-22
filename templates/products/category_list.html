@@ -1,0 +1,20 @@
+<!-- templates/products/category_list.html -->
+
+{% extends "base.html" %}
+
+{% block title %} {{ category.name }} products {% endblock %}
+
+{% block content %}
+  <h1>Products in {{ category.name }}</h1>
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for product in products %}
+      <div style="width: 400px;">
+      <img src="{{ product.image.url }}" style="width: 400px; height: 600px; object-fit: cover;" alt="{{ product.name }}">
+      <a href="{% url 'product_detail' product.pk %}">
+        <h4>{{ product.name }}</h4>
+        <!-- <p>Seller: {{ product.seller.username }}</p> @todo uncomment --> 
+      </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

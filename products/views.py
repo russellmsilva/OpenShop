@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from category.models import Category
 from .forms import ProductForm
 from .models import Product
 
@@ -26,3 +27,12 @@ def product_list(request):
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'products/product_detail.html', {'product': product})
+
+# View to duplicate product list template by category (so each category can have its own product list page)
+def category_products(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    return render(request, 'products/category_list.html', {
+        'category': category,
+        'products': products
+    })
