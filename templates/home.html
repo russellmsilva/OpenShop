@@ -5,12 +5,5 @@
 {% block title %}OpenShop Home{% endblock %}
 
 {% block content %}
-  <br>
-  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-    {% for category in categories %}
-      <a href="{% url 'category_products' category.slug %}" class="btn btn-secondary">
-        {{ category.name }}
-      </a>
-    {% endfor %}
-  </div>
+  
 {% endblock %}

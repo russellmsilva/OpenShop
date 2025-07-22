@@ -34,6 +34,10 @@ def product_detail(request, pk):
     if product.seller == request.user:
         error_message = "You can't add your own product to the cart."
 
+    # Check if the user is authenticated before allowing them to add to cart
+    if not request.user.is_authenticated:
+        error_message = "You must be logged in to add products to the cart."
+
     form = AddToCartForm(request.POST or None)
     if request.method == 'POST' and form.is_valid() and not error_message:
         existing_item = CartItem.objects.filter(
